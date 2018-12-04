@@ -27,13 +27,13 @@
 
 <div>
 
-    <h1>Edit judge: <span th:text="${judge.firstname}"></span></h1>
-    <form th:method="Post" th:action="@{/admin/edit_judge}">
-        <input type="hidden" th:field="${judge.id}"/>
+    <h1>Edit judge: <span th:text="${judge.firstName}"></span></h1>
+    <form th:method="Post" th:action="@{admin/edit_judge}">
+    <input type="hidden" th:field="${judge.idJ}"/>
 
-        <p>Firstname: </p><input type="text" size="40" th:field="${judge.firstname}"/>
+        <p>Firstname: </p><input type="text" size="40" th:field="${judge.firstName}"/>
         <br>
-        <p>Lastname: </p><input type="text" size="40" th:field="${judge.lastname}"/>
+        <p>Lastname: </p><input type="text" size="40" th:field="${judge.lastName}"/>
         <br>
         <p>Profession</p><input type="text" size="110" th:field="${judge.profession}">
         <br>

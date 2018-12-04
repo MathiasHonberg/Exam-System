@@ -32,6 +32,7 @@ public class UserController {
     private final String REDIRECT = "redirect:/";
     private final String INDEX = "index";
     private final String LOGIN = "login";
+    private final String SIGNUP = "signup";
 
     //GUEST
     private final String EVENT = "event";
@@ -46,7 +47,7 @@ public class UserController {
     private final String JUDGE_ADMIN = "admin/judge_admin";
     private final String KITCHEN_ADMIN = "admin/kitchen_admin";
     private final String VERIFY = "admin/verify";
-    private final String EDIT_JUDGE_ADMIN = "admin/edit_judge";
+    private final String EDIT_JUDGE_ADMIN = "/admin/edit_judge";
     private final String EDIT_KITCHEN_ADMIN = "admin/edit_kitchen";
 
     //KITCHEN
@@ -144,6 +145,37 @@ public class UserController {
 
         return REDIRECT + LOGIN;
     }
+
+// SIGN UP
+
+    @GetMapping("/signup")
+    public String signup(Model model){
+
+        log.info("Sign up called...");
+        model.addAttribute("user", new User());
+
+        return SIGNUP;
+    }
+
+    @PostMapping("/signup")
+    public String signup(@ModelAttribute User user, Model model,RedirectAttributes redirAttr) {
+        boolean signUpMatch = false;
+        signUpMatch = userService.signUpMatch(user);
+
+        if (signUpMatch == true) {
+            redirAttr.addFlashAttribute("loginsuccess", true);
+            userService.addUser(user);
+            log.info("User created...");
+        } else {
+
+            redirAttr.addFlashAttribute("loginError", true);
+            log.info("User failed to create...");
+
+            return REDIRECT + SIGNUP;
+        }
+        return REDIRECT;
+    }
+
 
 //EVENT
 
@@ -248,7 +280,7 @@ public class UserController {
         return LOGIN;
     }
 
-    @GetMapping("/admin/edit_admin/{id}")
+    @GetMapping("/admin/edit_judge/{id}")
     public String editJudgeAdmin(@PathVariable("id") int id, Model model){
         log.info("Edit Judge as judge action called...");
 
@@ -262,7 +294,7 @@ public class UserController {
         return LOGIN;
     }
 
-    @PutMapping("/admin/edit_admin/{id}")
+    @PutMapping("/admin/edit_judge/{id}")
     public String editJudgeAdmin(@ModelAttribute Judge judge, Model model){
 
         if(currentUser.getRole() == 1) {

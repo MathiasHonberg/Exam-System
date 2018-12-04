@@ -29,7 +29,7 @@
 
     <h1>Edit your informations:</h1>
     <form th:method="Post" th:action="@{/judge/edit_judge}">
-        <input type="hidden" th:field="${judge.id}"/>
+        <input type="hidden" th:field="${judge.idJ}"/>
 
         <p>Firstname: </p><input type="text" size="40" th:field="${judge.firstname}"/>
         <br>

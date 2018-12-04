@@ -2,6 +2,7 @@ package com.example.demo.Models;
 
 public class Judge extends User{
 
+    private int idJ;
     private String firstName;
     private String lastName;
     private String profession;
@@ -9,7 +10,8 @@ public class Judge extends User{
     private int iduser;
     private boolean verified;
 
-    public Judge(String firstName, String lastName, String profession, String jobdescription, int iduser, boolean verified) {
+    public Judge(int idJ, String firstName, String lastName, String profession, String jobdescription, int iduser, boolean verified) {
+        this.idJ = idJ;
         this.firstName = firstName;
         this.lastName = lastName;
         this.profession = profession;
@@ -18,8 +20,9 @@ public class Judge extends User{
         this.verified = verified;
     }
 
-    public Judge(int id, String username, String password, int role, String firstName, String lastName, String profession, String jobdescription, int iduser, boolean verified) {
+    public Judge(int id, String username, String password, int role, int idJ, String firstName, String lastName, String profession, String jobdescription, int iduser, boolean verified) {
         super(id, username, password, role);
+        this.idJ = idJ;
         this.firstName = firstName;
         this.lastName = lastName;
         this.profession = profession;
@@ -82,6 +85,14 @@ public class Judge extends User{
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public int getIdJ() {
+        return idJ;
+    }
+
+    public void setIdJ(int idJ) {
+        this.idJ = idJ;
     }
 
     @Override

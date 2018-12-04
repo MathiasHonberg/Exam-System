@@ -203,7 +203,7 @@ public class UserRepoImpl implements UserRepo{
                     int r = rs.getInt(11);
                     boolean f = rs.getBoolean(12);
 
-                    Judge judge = new Judge(c, username, password, r, firstname, lastname, prof, jd, r, f);
+                    Judge judge = new Judge(ur, username, password, r, c, firstname, lastname, prof, jd, r, f);
                     j.add(judge);
                 }
 
@@ -215,7 +215,7 @@ public class UserRepoImpl implements UserRepo{
     @Override
     public Judge addJudge(Judge judge) {
 
-        String sql = "INSERT INTO kitchen values (default, ?, ?, ?, ?, ?, 0)";
+        String sql = "INSERT INTO judge values (default, ?, ?, ?, ?, ?, 0)";
         jdbc.update(sql, judge.getFirstName(), judge.getLastName(), judge.getProfession(), judge.getJobdescription(), judge.getIduser());
 
         return judge;
@@ -272,6 +272,16 @@ public class UserRepoImpl implements UserRepo{
                 return user;
             }
         },un, pas);
+    }
+
+// SIGN UP
+
+    public User addUser (User user)
+    {
+        String sql = "INSERT INTO user Values (default, ?, ?, 4)";
+        jdbc.update(sql, user.getUsername(), user.getPassword());
+
+        return user;
     }
 
 

@@ -29,7 +29,7 @@
     <h1>Judge: <span th:text="${judge.firstName}"></span></h1>
     <form th:method="Put" th:action="@{/kitchen/judge_kitchen}" th:object="${judge}">
         <!--If you dont send the ID, JPA will create a new student object-->
-        <input type="hidden" th:field="${judge.id}"/>
+        <input type="hidden" th:field="${judge.idJ}"/>
         <br>
         <br>
         <table class="table table-striped table-bordered table-hover">

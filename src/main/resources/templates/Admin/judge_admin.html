@@ -95,7 +95,7 @@
     <h1>Judge: <span th:text="${judge.firstName}"></span></h1>
     <form th:method="Put" th:action="@{/admin/judge_admin}" th:object="${judge}">
         <!--If you dont send the ID, JPA will create a new student object-->
-        <input type="hidden" th:field="${judge.id}"/>
+        <input type="hidden" th:field="${judge.idJ}"/>
         <br>
         <br>
         <table class="table table-striped table-bordered table-hover">
@@ -109,13 +109,14 @@
             <td th:text="${judge.lastName}"/>
             <td th:text="${judge.profession}"/>
             <td th:text="${judge.jobdescription}"/>
+            <td th:text="${judge.idJ}"/>
             </tr>
 
         </table>
 
 <br><br>
 <!-- EDIT and REMOVE Judge button-->
-    <a th:href="${'/edit_judge/' + judge.id}"><button class="edit"><i class="fa fa-pencil"></i> Edit</button></a>
+    <a th:href="${'/admin/edit_judge/' + judge.idJ}"><i class="fa fa-pencil"></i> Edit</a>
     <button class="remove"><i class="fa fa-close"></i> Remove</button>
     </form>
 </div>
