@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -117,7 +116,7 @@ public class UserRepoImpl implements UserRepo{
                     int role = rs.getInt(10);
                     boolean f = rs.getBoolean(11);
 
-                    Kitchen kitchen = new Kitchen (idkit,username, password, role, kName, adresse, kDescription, picture, iduser, f);
+                    Kitchen kitchen = new Kitchen (iduser, username, password, role, idkit, kName, adresse, kDescription, picture, iduser, f);
 
                     k.add(kitchen);
 
@@ -130,15 +129,16 @@ public class UserRepoImpl implements UserRepo{
 
 
     @Override
-    @Transactional
     public Kitchen addKitchen(Kitchen kitchen) {
 
         String sql = "INSERT INTO kitchen values (default, ?, ?, ?, ?, ?, 0)";
         jdbc.update(sql, kitchen.getName(), kitchen.getAddress(), kitchen.getDescription(), kitchen.getPicture(), kitchen.getIduser());
 
+        String sql2 = "SELECT * FROM kitchen where iduser = ?";
 
-
-        return kitchen;
+        RowMapper<Kitchen> rowMapper = new BeanPropertyRowMapper<>(Kitchen.class);
+        Kitchen k2 = jdbc.queryForObject(sql2, rowMapper, kitchen.getIduser());
+        return k2;
     }
 
 
@@ -154,7 +154,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     @Override
-    public Kitchen editKitchen(int id, Kitchen kitchen) {
+    public Kitchen editKitchen(Kitchen kitchen) {
         return null;
     }//TODO
 
@@ -234,9 +234,9 @@ public class UserRepoImpl implements UserRepo{
     }
 
     @Override
-    public Judge editJudge(int id, Judge judge) {
+    public Judge editJudge(Judge judge) {
         return null;
-    }//TODO
+    }
 
     @Override
     public boolean deleteJudge(int id) {

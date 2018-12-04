@@ -2,6 +2,7 @@ package com.example.demo.Models;
 
 public class Kitchen extends User{
 
+    private int idk;
     private String name;
     private String address;
     private String description;
@@ -9,7 +10,8 @@ public class Kitchen extends User{
     private int iduser;
     private boolean verified = false;
 
-    public Kitchen(String name, String address, String description, String picture, int iduser, boolean verified) {
+    public Kitchen(String name, String address, String description, String picture, int idk, int iduser, boolean verified) {
+        this.idk = idk;
         this.name = name;
         this.address = address;
         this.description = description;
@@ -18,8 +20,9 @@ public class Kitchen extends User{
         this.verified = verified;
     }
 
-    public Kitchen(int id, String username, String password, int role, String name, String address, String description, String picture, int iduser, boolean verified) {
+    public Kitchen(int id, String username, String password, int role, int idk, String name, String address, String description, String picture, int iduser, boolean verified) {
         super(id, username, password, role);
+        this.idk = idk;
         this.name = name;
         this.address = address;
         this.description = description;
@@ -31,6 +34,14 @@ public class Kitchen extends User{
 
     public Kitchen() {
 
+    }
+
+    public int getIdk() {
+        return idk;
+    }
+
+    public void setIdk(int idk) {
+        this.idk = idk;
     }
 
     public int getIduser() {

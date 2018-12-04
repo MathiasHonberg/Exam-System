@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>FF Event</title>
+    <title>Judge-accept</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -27,7 +27,7 @@
 
 <h1>YOU HAVE APPLIED FOR THE EVENT!</h1>
 <div>
-    <form th:method="Post" th:action="@{/kitchen/accept_kitchen}"   >
+    <form th:method="get" th:action="@{/judge/accept_judge}"   >
 
         <a href="/user/index_user"><button type="submit" class="btn btn-succes" value="OK">OK</button></a>
     </form>

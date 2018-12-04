@@ -28,7 +28,7 @@
 <div>
 
 <h1>Apply for kitchen</h1>
-<form method="Post" th:action="@{/kitchen/kitchen_form}">
+<form th:method="Post" th:action="@{/kitchen/kitchen_form}">
 
     <p>Name: </p><input type="text" size="40" th:field="${kitchen.name}"/>
     <br>

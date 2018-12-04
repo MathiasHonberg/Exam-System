@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -25,7 +26,6 @@ public class UserController {
 
     //Current User logged in
     private User currentUser = new User();
-
     private Kitchen currentKitchen = new Kitchen();
 
     //RETURN STRINGS
@@ -46,6 +46,8 @@ public class UserController {
     private final String JUDGE_ADMIN = "admin/judge_admin";
     private final String KITCHEN_ADMIN = "admin/kitchen_admin";
     private final String VERIFY = "admin/verify";
+    private final String EDIT_JUDGE_ADMIN = "admin/edit_judge";
+    private final String EDIT_KITCHEN_ADMIN = "admin/edit_kitchen";
 
     //KITCHEN
     private final String INDEX_KITCHEN = "kitchen/index_kitchen";
@@ -53,12 +55,14 @@ public class UserController {
     private final String JUDGE_KITCHEN = "kitchen/judge_kitchen";
     private final String KITCHEN_KITCHEN = "kitchen/kitchen_kitchen";
     private final String ACCEPT_KITCHEN = "kitchen/accept_kitchen";
+    private final String EDIT_KITCHEN = "kitchen/edit_kitchen";
 
     //JUDGE
     private final String INDEX_JUDGE = "judge/index_judge";
     private final String EVENT_JUDGE = "judge/event_judge";
     private final String JUDGE_JUDGE = "judge/judge_judge";
     private final String KITCHEN_JUDGE = "judge/kitchen_judge";
+    private final String EDIT_JUDGE = "judge/edit_judge";
 
     //USER
     private final String INDEX_USER = "user/index_user";
@@ -244,6 +248,33 @@ public class UserController {
         return LOGIN;
     }
 
+    @GetMapping("/admin/edit_admin/{id}")
+    public String editJudgeAdmin(@PathVariable("id") int id, Model model){
+        log.info("Edit Judge as judge action called...");
+
+        if(currentUser.getRole() == 1){
+
+            model.addAttribute("judge", userService.readJudge(id));
+
+            return EDIT_JUDGE_ADMIN;
+        }
+
+        return LOGIN;
+    }
+
+    @PutMapping("/admin/edit_admin/{id}")
+    public String editJudgeAdmin(@ModelAttribute Judge judge, Model model){
+
+        if(currentUser.getRole() == 1) {
+            userService.editJudge(judge);
+
+            model.addAttribute("judge", userService.getJudges());
+
+            return JUDGE_ADMIN;
+        }
+        return LOGIN;
+    }
+
 //VERIFY
 
     @GetMapping("/admin/verify")
@@ -353,24 +384,23 @@ public class UserController {
         return LOGIN;
     }
 
-    @PostMapping("/kitchen/kitchen_form")
-    public String kitchenForm(@ModelAttribute Kitchen kitchen, Model model){
+    @PostMapping("/kitchen/kitchen_form/{id}")
+    public String kitchenForm(@PathVariable("id") int id, @ModelAttribute Kitchen kitchen, Model model){
+
 
         if(currentUser.getRole() == 4) {
             kitchen.setIduser(currentUser.getId());
 
-            userService.addKitchen(kitchen);
+            currentKitchen = userService.addKitchen(kitchen);
+            //model.addAttribute("k4", k4);
             model.addAttribute("kitchens", userService.getKitchens());
-
-            currentKitchen = kitchen;
-
             return ACCEPT_KITCHEN;
         }
         return LOGIN;
     }
 
-    @PostMapping("/kitchen/accept_kitchen")
-    public String kitchenAccept(Model model){
+    @GetMapping("/kitchen/accept_kitchen/{id}")
+    public String kitchenAccept(@PathVariable("id") int id,  Model model){
         if(currentUser.getRole() == 4){
 
             userService.addKitchenToEvent(currentKitchen.getId());
@@ -439,6 +469,30 @@ public class UserController {
         return LOGIN;
     }
 
+    @GetMapping("/judge/edit_judge/{id}")
+    public String editJudgeJudge(Model model){
+        log.info("Edit Judge as judge action called...");
+
+        if(currentUser.getRole() == 3){
+
+            return EDIT_JUDGE;
+        }
+
+        return LOGIN;
+    }
+
+    @PutMapping("/judge/edit_judge/")
+    public String editJudgeJudge(@ModelAttribute Judge judge, Model model){
+        if(currentUser.getRole() == 3) {
+            userService.editJudge(judge);
+
+            model.addAttribute("judge", userService.getJudges());
+
+            return JUDGE_JUDGE;
+        }
+        return LOGIN;
+    }
+
 //JUDGE FORM
     @GetMapping("/judge/judge_form")
     public String judgeForm(Model model){
@@ -470,6 +524,17 @@ public class UserController {
 
         return INDEX_USER;
 
+    }
+
+    @PostMapping("/judge/accept_judge")
+    public String judgeAccept(Model model){
+        if(currentUser.getRole() == 4){
+
+            userService.addKitchenToEvent(2);
+
+            return ACCEPT_KITCHEN;
+        }
+        return LOGIN;
     }
 
 //USER

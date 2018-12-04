@@ -8,6 +8,7 @@ import com.example.demo.Repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -71,9 +72,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Kitchen editKitchen(int id, Kitchen kitchen) {
+    public Kitchen editKitchen(Kitchen kitchen) {
 
-        return userRepo.editKitchen(id, kitchen);
+        return userRepo.editKitchen(kitchen);
     }
 
     @Override
@@ -108,9 +109,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Judge editJudge(int id, Judge judge) {
+    public Judge editJudge(Judge judge) {
 
-        return userRepo.editJudge(id, judge);
+        return userRepo.editJudge(judge);
     }
 
     @Override
