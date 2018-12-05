@@ -103,7 +103,7 @@ public class UserController {
     public String logout(Model model){
         currentUser = new User();
 
-        return REDIRECT + LOGIN;
+        return REDIRECT;
     }
 
     //SIGN UP
