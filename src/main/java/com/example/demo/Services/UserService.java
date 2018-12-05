@@ -5,6 +5,7 @@ import com.example.demo.Models.Judge;
 import com.example.demo.Models.Kitchen;
 import com.example.demo.Models.User;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +13,7 @@ import java.util.List;
 @Service
 public interface UserService {
 
-    //EVENTS
-    List<Event> getEvents();
-    Event addEvent(Event event);
-    Event readEvent(int id);
-    Event editEvent(int id, Event event);
-    boolean deleteEvent(int id);
+
 
     //KITCHENS
     List<Kitchen> getKitchens();
@@ -40,9 +36,12 @@ public interface UserService {
 
     //SIGN UP
     boolean signUpMatch(User user);
-    User addUser (User user);
+    User addUser(User user);
 
     //CONFIRM
     void confirmKitchen(int id);
     boolean confirmJudge(Judge judge);
+
+    //LOGIN
+    void loginStatus(Model model);
 }

@@ -1,6 +1,8 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.Models.Event;
+import com.example.demo.Models.Judge;
+import com.example.demo.Models.Kitchen;
 import com.example.demo.Services.EventService;
 import com.example.demo.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
-public class HomeController {
+public class EventController {
 
     @Autowired
     UserService userService;
@@ -20,26 +22,29 @@ public class HomeController {
     @Autowired
     EventService eventService;
 
+
+
     //LOGGER
     Logger log = Logger.getLogger(HomeController.class.getName());
 
+    //Return Strings
+    private final String EVENT = "event";
 
-//INDEX
+    @GetMapping("/event")
+    public String event(Model model){
+        log.info("See event action called..");
 
-    //RETURN STRING
-    private final String INDEX = "index";
+        List<Kitchen> k = userService.getKitchens();
+        model.addAttribute("kitchens", k);
 
-    @GetMapping("/")
-    public String index(Model model){
-        log.info("Index action called...");
+        List<Judge> j = userService.getJudges();
+        model.addAttribute("judges", j);
 
         List<Event> e = eventService.getEvents();
         model.addAttribute("events", e);
 
-        userService.loginStatus(model);
 
-        return INDEX;
+        return EVENT;
+
     }
-
-
 }

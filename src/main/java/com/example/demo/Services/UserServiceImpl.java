@@ -7,6 +7,7 @@ import com.example.demo.Models.User;
 import com.example.demo.Repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,36 +19,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserRepo userRepo;
 
-//EVENTS
 
-    @Override
-    public List<Event> getEvents() {
-
-        return userRepo.getEvents();
-    }
-
-    @Override
-    public Event addEvent(Event event) {
-
-        return userRepo.addEvent(event);
-    }
-
-    @Override
-    public Event readEvent(int id) {
-
-        return userRepo.readEvent(id);
-    }
-
-    @Override
-    public Event editEvent(int id, Event event) {
-
-        return userRepo.editEvent(id, event);
-    }
-
-    @Override
-    public boolean deleteEvent(int id) {
-
-        return userRepo.deleteEvent(id);
+    //LOGIN
+    public void loginStatus(Model model) {userRepo.loginStatus(model);
     }
 
 

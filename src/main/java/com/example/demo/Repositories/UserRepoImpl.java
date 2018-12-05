@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.ui.Model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,65 +24,31 @@ public class UserRepoImpl implements UserRepo{
     @Autowired
     JdbcTemplate jdbc;
 
-//EVENTS
+    //Current User logged in
+    private User currentUser = new User();
 
-    @Override
-    public List<Event> getEvents() {
+    //Login
+    public void loginStatus(Model model) {
 
-        ArrayList<Event> e = new ArrayList<>();
-
-        String sql = "SELECT name, description, date FROM event";
-
-
-        // Fra sql til list.
-        // Manuelt i stedet.
-        return this.jdbc.query(sql, new ResultSetExtractor<java.util.List<Event>>() {
-
-            @Override
-            public java.util.List<Event> extractData(ResultSet rs) throws SQLException, DataAccessException {
-
-                while (rs.next()) {
-                    String name = rs.getString("name");
-                    String description = rs.getString("description");
-                    String date = rs.getString("date");
-
-
-                    Event event = new Event(name, description, date);
-
-                    e.add(event);
-                }
-                return e;
-            }
-        });
+        if (currentUser.getRole() == 1) {
+            model.addAttribute("isLoggedin", true);
+            model.addAttribute("isAdmin", true);
+            model.addAttribute("username", currentUser.getUsername());
+        } else if (currentUser.getRole() == 2) {
+            model.addAttribute("isLoggedin", true);
+            model.addAttribute("username", currentUser.getUsername());
+        } else if (currentUser.getRole() == 3) {
+            model.addAttribute("isLoggedin", true);
+            model.addAttribute("username", currentUser.getUsername());
+        } else if (currentUser.getRole() == 4){
+            model.addAttribute("isLoggedin", true);
+            model.addAttribute("username", currentUser.getUsername());
+        }
     }
 
-    @Override
-    public Event addEvent(Event event) {
-
-        String sql = "INSERT INTO event values (default, ?, ?, ?)";
-        jdbc.update(sql, event.getName(), event.getDescription(), event.getDate());
-
-        return event;
-    }
-
-    @Override
-    public Event readEvent(int id) {
-        return null;
-    }
-
-    @Override
-    public Event editEvent(int id, Event event) {
 
 
-        String sql = "UPDATE event SET name=?, description=?, date=? WHERE idevent=?";
-        jdbc.update(sql, event.getName(), event.getDescription(), event.getDate());
-        return event;
-    }
 
-    @Override
-    public boolean deleteEvent(int id) {
-        return false;
-    }
 
 
 //KITCHENS
@@ -98,7 +65,7 @@ public class UserRepoImpl implements UserRepo{
                 "INNER JOIN user ON kitchen.iduser = user.iduser " +
                 "INNER JOIN role ON role.idrole = user.idrole";
 
-        return this.jdbc.query(sql, new ResultSetExtractor<java.util.List<Kitchen>>() {
+        return this.jdbc.query(sql, new ResultSetExtractor<List<Kitchen>>() {
 
             @Override
             public List<Kitchen> extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -186,7 +153,7 @@ public class UserRepoImpl implements UserRepo{
                 "INNER JOIN user ON judge.iduser = user.iduser " +
                 "INNER JOIN role ON role.idrole = user.idrole";
 
-        return this.jdbc.query(sql, new ResultSetExtractor<java.util.List<Judge>>() {
+        return this.jdbc.query(sql, new ResultSetExtractor<List<Judge>>() {
 
             @Override
             public List<Judge> extractData(ResultSet rs) throws SQLException, DataAccessException {
