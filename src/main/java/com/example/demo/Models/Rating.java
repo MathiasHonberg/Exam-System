@@ -7,16 +7,46 @@ public class Rating {
     private int ascore;
     private int tscore;
     private int idk;
+    private int idj;
+    private String firstName;
+    private String lastName;
 
-    public Rating(int idr, String evaluation, int ascore, int tscore, int idk) {
+    public Rating(int idr, String evaluation, int ascore, int tscore, int idk, int idj, String firstName, String lastName) {
         this.idr = idr;
         this.evaluation = evaluation;
         this.ascore = ascore;
         this.tscore = tscore;
         this.idk = idk;
+        this.idj = idj;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Rating() {
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public int getIdj() {
+        return idj;
+    }
+
+    public void setIdj(int idj) {
+        this.idj = idj;
     }
 
     public int getIdr() {

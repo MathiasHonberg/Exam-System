@@ -1,10 +1,8 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.Models.Event;
-import com.example.demo.Models.Judge;
-import com.example.demo.Models.Kitchen;
-import com.example.demo.Models.User;
+import com.example.demo.Models.*;
 import com.example.demo.Services.EventService;
+import com.example.demo.Services.RatingService;
 import com.example.demo.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +22,9 @@ public class UserController {
 
     @Autowired
     EventService eventService;
+
+    @Autowired
+    RatingService ratingService;
 
     //Logger
     private Logger log = Logger.getLogger(UserController.class.getName());
@@ -502,6 +503,7 @@ public class UserController {
 
         if(currentUser.getRole() == 3) {
             model.addAttribute("kitchen", userService.readKitchen(id));
+            model.addAttribute("rating", ratingService.readRating(id));
 
             return KITCHEN_JUDGE;
         }
@@ -596,6 +598,35 @@ public class UserController {
         model.addAttribute("judge", userService.readJudge(id));
 
         return JUDGE;
+    }
+
+//RATINGS
+
+    //RETURN STRINGS
+    private final String GIVE_RATING = "rating/give_rating";
+
+    @GetMapping("/rating/give_rating{id}")
+    public String giveRating(@PathVariable Integer id, Model model){
+
+        if(currentUser.getRole() == 3){
+
+            model.addAttribute("rating", new Rating());
+
+            return GIVE_RATING;
+        }
+        return LOGIN;
+    }
+
+    @PostMapping("/rating/give_rating{id}")
+    public String giveRating(@PathVariable Integer id, @ModelAttribute Rating rating, Model model){
+
+        if(currentUser.getRole() == 3){
+
+            ratingService.giveRating(rating);
+
+            return EVENT_JUDGE;
+        }
+        return LOGIN;
     }
 
 }
