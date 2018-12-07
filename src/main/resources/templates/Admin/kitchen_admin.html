@@ -92,7 +92,7 @@
     <h1>Kitchen: <span th:text="${kitchen.name}"></span></h1>
     <form th:method="Put" th:action="@{/admin/kitchen_admin}" th:object="${kitchen}">
         <!--If you dont send the ID, JPA will create a new student object-->
-        <input type="hidden" th:field="${kitchen.id}"/>
+        <input type="hidden" th:field="${kitchen.idk}"/>
         <br>
         <br>
         <table class="table table-striped table-bordered table-hover">
@@ -117,7 +117,25 @@
     <button class="edit"><i class="fa fa-pencil"></i> Edit</button>
     <button class="remove"><i class="fa fa-close"></i> Remove</button>
 </div>
-<br><br>
+<br>
+<div>
+    <h3>Rating: (maybe the average score?)</h3>
+    <input type="hidden" th:field="${rating.idr}"/>
+    <br>
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+            <th>Judge</th>
+            <th>A score</th>
+            <th>Taste score</th>
+            <th>Evaluation</th>
+        </tr>
+        <td th:text="${rating.firstName}"/>
+        <td th:text="${rating.ascore}"/>
+        <td th:text="${rating.tscore}"/>
+        <td th:text="${rating.evaluation}"/>
+    </table>
+</div>
+<br>
 
 
 <!-- Footer -->

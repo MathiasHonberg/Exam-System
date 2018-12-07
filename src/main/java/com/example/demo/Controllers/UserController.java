@@ -184,6 +184,7 @@ public class UserController {
 
         if(currentUser.getRole() == 4) {
             model.addAttribute("kitchen", userService.readKitchen(id));
+            model.addAttribute("rating", ratingService.readRating(id));
 
             return KITCHEN_USER;
         }
@@ -254,6 +255,7 @@ public class UserController {
         log.info("Read kitchenAdmin with id: " + id);
         if(currentUser.getRole() == 1) { //checks if an admin is logged in
             model.addAttribute("kitchen", userService.readKitchen(id));
+            model.addAttribute("rating", ratingService.readRating(id));
 
             model.addAttribute("username", currentUser.getUsername());
 
@@ -382,6 +384,7 @@ public class UserController {
 
         if(currentUser.getRole() == 2) {
             model.addAttribute("kitchen", userService.readKitchen(id));
+            model.addAttribute("rating", ratingService.readRating(id));
 
             return KITCHEN_KITCHEN;
         }
@@ -450,6 +453,7 @@ public class UserController {
         log.info("Read kitchen with id: " + id);
 
         model.addAttribute("kitchen", userService.readKitchen(id));
+        model.addAttribute("rating", ratingService.readRating(id));
 
         return KITCHEN;
     }
@@ -571,9 +575,9 @@ public class UserController {
         judge.setIduser(currentUser.getId());
 
         userService.addJudge(judge);
-        model.addAttribute("kitchens", userService.getKitchens());
+        model.addAttribute("judges", userService.getJudges());
 
-        userService.addKitchenToEvent(judge.getId());
+        //userService.addJudgeToEvent(judge.getId()); TODO
 
         return INDEX_USER;
 
