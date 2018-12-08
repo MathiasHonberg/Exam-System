@@ -29,10 +29,12 @@ public interface UserService {
     Judge readJudge(int id);
     Judge editJudge(Judge judge);
     boolean deleteJudge(int id);
+    void addJudgeToEvent(int id);
 
     //LOGGEDIN USER
     boolean loginMatch(User user);
     User loggedIn(User user);
+    List<User> getUsers();
 
     //SIGN UP
     boolean signUpMatch(User user);

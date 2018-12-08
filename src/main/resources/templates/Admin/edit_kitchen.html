@@ -19,6 +19,7 @@
         <a th:href="@{/admin/index_admin}" class="w3-bar-item w3-button"><b>FF</b> EVENT</a>
         <!-- Float links to the right. Hide them on small screens -->
         <div class="w3-right w3-hide-small">
+            <a href="/admin/account" class="w3-bar-item w3-button"><span th:text="${username}"></span></a>
             <a href="/logout" class="w3-bar-item w3-button">Logout</a>
         </div>
     </div>
@@ -29,7 +30,7 @@
 
     <h1>Edit informations:</h1>
     <form th:method="Post" th:action="@{/admin/edit_kitchen}">
-        <input type="hidden" th:field="${kitchen.id}"/>
+        <input type="hidden" th:field="${kitchen.idk}"/>
 
         <p>Firstname: </p><input type="text" size="40" th:field="${kitchen.name}"/>
         <br>

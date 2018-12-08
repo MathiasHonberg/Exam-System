@@ -48,6 +48,7 @@ public class UserController {
     private final String KITCHEN_FORM = "kitchen/kitchen_form";
 
 
+
     //LOGIN
     @GetMapping("/login")
     public String login(Model model) {
@@ -136,6 +137,14 @@ public class UserController {
         return REDIRECT;
     }
 
+//Account
+
+    @GetMapping("/account")
+    public String Account(Model model){
+
+        model.addAttribute("user", currentUser);
+        return ACCOUNT;
+    }
 
 //User:
 
@@ -144,6 +153,7 @@ public class UserController {
     private final String EVENT_USER = "user/event_user";
     private final String JUDGE_USER = "user/judge_user";
     private final String KITCHEN_USER = "user/kitchen_user";
+    private final String ACCOUNT = "account";
 
     @GetMapping("/user/index_user")
     public String indexUser(Model model){
@@ -184,8 +194,9 @@ public class UserController {
 
         if(currentUser.getRole() == 4) {
             model.addAttribute("kitchen", userService.readKitchen(id));
-            model.addAttribute("rating", ratingService.readRating(id));
-
+            if(ratingService.readRating(id) != null) {
+                model.addAttribute("rating", ratingService.readRating(id));
+            }
             return KITCHEN_USER;
         }
         return LOGIN;
@@ -214,6 +225,18 @@ public class UserController {
     private final String VERIFY = "admin/verify";
     private final String EDIT_JUDGE_ADMIN = "/admin/edit_judge";
     private final String EDIT_KITCHEN_ADMIN = "admin/edit_kitchen";
+    private final String ACCOUNT_ADMIN = "admin/account";
+
+    //Account
+
+    @GetMapping("/admin/account")
+    public String adminAccount(Model model){
+
+        model.addAttribute("user", currentUser);
+        model.addAttribute("users", userService.getUsers());
+
+        return ACCOUNT_ADMIN;
+    }
 
     @GetMapping("/admin/index_admin")
     public String indexAdmin(Model model){
@@ -256,8 +279,35 @@ public class UserController {
         if(currentUser.getRole() == 1) { //checks if an admin is logged in
             model.addAttribute("kitchen", userService.readKitchen(id));
             model.addAttribute("rating", ratingService.readRating(id));
-
+            model.addAttribute("kitchenid", id);
             model.addAttribute("username", currentUser.getUsername());
+
+            return KITCHEN_ADMIN;
+        }
+        return LOGIN;
+    }
+
+    @GetMapping("/admin/edit_kitchen/{id}")
+    public String editKitchenAdmin(@PathVariable("id") int id, Model model){
+        log.info("Edit kitchen as admin action called...");
+
+        if(currentUser.getRole() == 1){
+
+            model.addAttribute("kitchen", userService.readKitchen(id));
+
+            return EDIT_KITCHEN_ADMIN;
+        }
+
+        return LOGIN;
+    }
+
+    @PutMapping("/admin/edit_kitchen/{id}")
+    public String editKitchenAdmin(@ModelAttribute Judge judge, Model model){
+
+        if(currentUser.getRole() == 1) {
+            userService.editJudge(judge);
+
+            model.addAttribute("kitchen", userService.getKitchens());
 
             return KITCHEN_ADMIN;
         }
@@ -269,7 +319,7 @@ public class UserController {
         log.info("Read judgeAdmin with id: " + id);
         if(currentUser.getRole() == 1) { //checks if an admin is logged in
             model.addAttribute("judge", userService.readJudge(id));
-
+            model.addAttribute("judgeid", id);
             model.addAttribute("username", currentUser.getUsername());
 
             return JUDGE_ADMIN;
@@ -319,7 +369,7 @@ public class UserController {
     }
 
     @PutMapping("/admin/verify/{id}")
-    public String verify(@PathVariable("id") int id, Model model) {
+    public String verify(@PathVariable("id") int id, @ModelAttribute Kitchen kitchen, Model model) {
         log.info("Verify put action called...");
         if(currentUser.getRole() == 1) { //checks if an admin is logged in
 
@@ -329,7 +379,7 @@ public class UserController {
 
             model.addAttribute("username", currentUser.getUsername());
 
-            return VERIFY;
+            return INDEX_ADMIN;
         }
         return LOGIN;
     }
@@ -344,6 +394,17 @@ public class UserController {
     private final String KITCHEN_KITCHEN = "kitchen/kitchen_kitchen";
     private final String ACCEPT_KITCHEN = "kitchen/accept_kitchen";
     private final String EDIT_KITCHEN = "kitchen/edit_kitchen";
+    private final String ACCOUNT_KITCHEN = "kitchen/account";
+
+    //Account
+
+    @GetMapping("/kitchen/account")
+    public String kitchenAccount(Model model){
+
+        model.addAttribute("user", currentUser);
+
+        return ACCOUNT_KITCHEN;
+    }
 
     @GetMapping("/kitchen/index_kitchen")
     public String indexKitchen(Model model){
@@ -453,8 +514,11 @@ public class UserController {
         log.info("Read kitchen with id: " + id);
 
         model.addAttribute("kitchen", userService.readKitchen(id));
-        model.addAttribute("rating", ratingService.readRating(id));
 
+        if(ratingService.readRating(id) != null) {
+            model.addAttribute("showr", true);
+            model.addAttribute("rating", ratingService.readRating(id));
+        }
         return KITCHEN;
     }
 
@@ -467,6 +531,16 @@ public class UserController {
     private final String JUDGE_JUDGE = "judge/judge_judge";
     private final String KITCHEN_JUDGE = "judge/kitchen_judge";
     private final String EDIT_JUDGE = "judge/edit_judge";
+    private final String ACCOUNT_JUDGE = "judge/account";
+
+    //Account
+
+    @GetMapping("/judge/account")
+    public String judgeAccount(Model model){
+
+        model.addAttribute("user", currentUser);
+        return ACCOUNT_JUDGE;
+    }
 
     @GetMapping("/judge/index_judge")
     public String indexJudge(Model model){

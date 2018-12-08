@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
     body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
 <!-- Notification button style -->
@@ -84,7 +85,7 @@
                 <span>Request</span>
                 <span class="badge">2</span>
             </a>
-            <a href="/admin/event_admin" class="w3-bar-item w3-button"><span th:text="${username}"></span></a>
+            <a href="/admin/account" class="w3-bar-item w3-button"><span th:text="${username}"></span></a>
             <a class="w3-bar-item w3-button" href="/logout">Logout</a>
         </div>
     </div>
@@ -116,7 +117,7 @@
 
 <br><br>
 <!-- EDIT and REMOVE Judge button-->
-    <a th:href="${'/admin/edit_judge/' + judge.idJ}"><i class="fa fa-pencil"></i> Edit</a>
+    <button class="edit"><i class="fa fa-pencil"></i>Edit</button>
     <button class="remove"><i class="fa fa-close"></i> Remove</button>
     </form>
 </div>

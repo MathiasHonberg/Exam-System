@@ -210,6 +210,11 @@ public class UserRepoImpl implements UserRepo{
         return false;
     }//TODO
 
+    public void addJudgeToEvent(int id){
+
+
+    }
+
 //LOGGEDIN USER
 
     @Override
@@ -239,6 +244,35 @@ public class UserRepoImpl implements UserRepo{
                 return user;
             }
         },un, pas);
+    }
+
+//ACCOUNT DETAILS
+
+    public List<User> getUsers(){
+
+        ArrayList<User> u = new ArrayList<>();
+
+        String sql = "SELECT * FROM user";
+
+
+        return this.jdbc.query(sql, new ResultSetExtractor<List<User>>() {
+
+            @Override
+            public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
+
+                while (rs.next()) {
+                    int userid = rs.getInt(1);
+                    String us = rs.getString(2);
+                    String pw = rs.getString(3);
+                    int role = rs.getInt(4);
+
+                    User user = new User(userid, us, pw, role);
+                    u.add(user);
+                }
+
+                return u;
+            }
+        });
     }
 
 // SIGN UP

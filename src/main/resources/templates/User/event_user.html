@@ -26,7 +26,7 @@
         <div class="w3-bar-item w3-button" onclick="w3_open()">Apply</div>
         <!-- Float links to the right. Hide them on small screens -->
         <div class="w3-right w3-hide-small">
-            <a href="/user/index_user" class="w3-bar-item w3-button"><span th:text="${username}"></span></a>
+            <a href="/account" class="w3-bar-item w3-button"><span th:text="${username}"></span></a>
             <a href="#about" class="w3-bar-item w3-button">About</a>
             <a href="#kitchens" class="w3-bar-item w3-button">Kitchens</a>
             <a href="#judges" class="w3-bar-item w3-button">Judges</a>
@@ -62,7 +62,7 @@
         <div class="w3-col l3 m6 w3-margin-bottom">
             <div class="w3-display-container">
                 <div class="w3-display-topleft w3-black w3-padding" th:text = "${kitchen.name}"></div>
-                <a th:href="${'kitchen_kitchen/' + kitchen.idk}">
+                <a th:href="${'kitchen_user/' + kitchen.idk}">
                     <img th:src="${kitchen.picture}" alt="Kitchen" style="width:90%">
                 </a>
             </div>
@@ -80,7 +80,7 @@
             <h3><b th:text="${judge.lastName}"></b></h3>
             <p class="w3-opacity" th:text="${judge.profession}"></p>
             <p><b th:text="${judge.jobdescription}"></b></p>
-            <a th:href="${'judge_kitchen/' + judge.idJ}">
+            <a th:href="${'judge_user/' + judge.idJ}">
                 <p><button class="w3-button w3-dark-grey w3-block">LÆS MER' DIN FED KO</button></p>
             </a>
             <br>

@@ -94,6 +94,11 @@ public class UserServiceImpl implements UserService{
         return userRepo.deleteJudge(id);
     }
 
+    public void addJudgeToEvent(int id){
+
+        userRepo.addJudgeToEvent(id);
+    }
+
 //LOGGEDIN USER
 
     public boolean loginMatch(User user) {
@@ -116,6 +121,11 @@ public class UserServiceImpl implements UserService{
 
         user = userRepo.findLogin(user.getUsername(),user.getPassword());
         return user;
+    }
+
+    public List<User> getUsers(){
+
+        return userRepo.getUsers();
     }
 
 //SIGN UP
