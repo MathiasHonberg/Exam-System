@@ -27,7 +27,6 @@ public interface UserRepo {
     Judge readJudge(int id);
     Judge editJudge(Judge judge);
     boolean deleteJudge(int id);
-    void addJudgeToEvent(int id);
 
     //LOGGEDIN USER
     User findLogin(String username, String password);

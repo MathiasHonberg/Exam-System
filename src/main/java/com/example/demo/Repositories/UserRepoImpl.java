@@ -210,11 +210,6 @@ public class UserRepoImpl implements UserRepo{
         return false;
     }//TODO
 
-    public void addJudgeToEvent(int id){
-
-
-    }
-
 //LOGGEDIN USER
 
     @Override
@@ -246,8 +241,7 @@ public class UserRepoImpl implements UserRepo{
         },un, pas);
     }
 
-//ACCOUNT DETAILS
-
+// ACCOUNT
     public List<User> getUsers(){
 
         ArrayList<User> u = new ArrayList<>();

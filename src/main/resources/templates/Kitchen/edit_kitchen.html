@@ -16,33 +16,56 @@
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
     <div class="w3-bar w3-white w3-wide w3-padding w3-card">
-        <a th:href="@{/kitchen/index_kitchen}" class="w3-bar-item w3-button"><b>FF</b> EVENT</a>
+        <a th:href="@{/index_logged}" class="w3-bar-item w3-button"><b>FF</b> EVENT</a>
         <!-- Float links to the right. Hide them on small screens -->
         <div class="w3-right w3-hide-small">
-            <a href="/kitchen/account" class="w3-bar-item w3-button"><span th:text="${username}"></span></a>
             <a href="/logout" class="w3-bar-item w3-button">Logout</a>
         </div>
     </div>
 </div>
 <br><br>
 
-<div>
+<th:block th:switch="${role}">
 
-    <h1>Edit your informations:</h1>
-    <form th:method="Post" th:action="@{/kitchen/edit_kitchen}">
-        <input type="hidden" th:field="${kitchen.id}"/>
+    <div th:case="'1'" class="w3-row">
 
-        <p>Firstname: </p><input type="text" size="40" th:field="${kitchen.name}"/>
+        <h1>Edit kitchen: <span th:text="${kitchen.name}"></span></h1>
+        <input type="hidden" th:field="${kitchen.idk}"/>
+
+        <p>Name: </p><input type="text" size="40" th:field="${kitchen.name}"/>
+        <br>
+        <p>Address: </p><input type="text" size="40" th:field="${kitchen.address}"/>
+        <br>
+        <p>Description: </p><textarea rows="4" cols="50" th:field="${kitchen.description}"></textarea>
+        <br>
+        <p>Picture: </p><textarea rows="4" cols="50" th:field="${kitchen.picture}"></textarea>
+        <br><br>
+        <input type="submit" class="btn btn-success" value="Edit"><!-- TO BE DONE -->
+
+    </div>
+
+    <div th:case="'3'" class="w3-row">
+
+        <h1>Edit your informations:</h1>
+        <input type="hidden" th:field="${kitchen.idk}"/>
+
+        <p>Firstname: </p><input type="text" size="40" th:field="${kitchen.Name}"/>
         <br>
         <p>Lastname: </p><input type="text" size="40" th:field="${kitchen.address}"/>
         <br>
         <p>Description: </p><textarea rows="4" cols="50" th:field="${kitchen.description}"></textarea>
         <br>
-        <p>Picture Link: </p><input type="text" size="110" th:field="${kitchen.picture}"/>
+        <p>Picture: </p><input type="text" size="40" th:field="${kitchen.picture}"/>
         <br>
-        <input type="submit" class="btn btn-success" value="Apply"><!-- TO BE DONE -->
-    </form>
-</div>
+        <input type="submit" class="btn btn-success" value="Edit"><!-- TO BE DONE -->
+
+    </div>
+
+    <div th:case="*" class="w3-row">
+        <p>You are not supposed to be here, no one's supposed to be here...</p>
+    </div>
+
+</th:block>
 <br><br>
 
 <!-- Footer -->

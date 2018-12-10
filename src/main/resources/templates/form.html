@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Edit-judge</title>
+    <title>FF Event</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -27,45 +27,47 @@
 
     <th:block th:switch="${role}">
 
-        <div th:case="'1'" class="w3-row">
+        <div th:case="'2'" class="w3-row">
 
-            <h1>Edit judge: <span th:text="${judge.firstName}"></span></h1>
-                <input type="hidden" th:field="${judge.idJ}"/>
+            <div>
 
-                <p>Firstname: </p><input type="text" size="40" th:field="${judge.firstName}"/>
+                <h1>Apply for kitchen</h1>
+                <form th:method="Post" th:action="@{/kitchen/form/}">
+
+                    <p>Name: </p><input type="text" size="40" th:field="${kitchen.name}"/>
+                    <br>
+                    <p>Address: </p><input type="text" size="40" th:field="${kitchen.address}"/>
+                    <br>
+                    <p>Description: </p><textarea rows="4" cols="50" th:field="${kitchen.description}"></textarea>
+                    <br>
+                    <p>Picture link:</p><input type="text" size="110" th:field="${kitchen.picture}">
+                    <br><br>
+                    <input type="submit" class="btn btn-success" value="Apply">
+
+                </form>
+            </div>
+        </div>
+
+        <div th:case="'3'">
+
+            <form th:method="Post" th:action="@{/kitchen/form/}">
+
+                <p>First name: </p><input type="text" size="40" th:field="${judge.firstName}"/>
                 <br>
-                <p>Lastname: </p><input type="text" size="40" th:field="${judge.lastName}"/>
+                <p>Last name: </p><input type="text" size="40" th:field="${judge.lastName}"/>
                 <br>
-                <p>Profession</p><input type="text" size="110" th:field="${judge.profession}">
+                <p>Profession </p><input type="text" size="40" th:field="${judge.profession}"/>
                 <br>
                 <p>Job Description: </p><textarea rows="4" cols="50" th:field="${judge.jobdescription}"></textarea>
                 <br><br>
-                <input type="submit" class="btn btn-success" value="Edit"><!-- TO BE DONE -->
+                <input type="submit" class="btn btn-success" value="Apply">
 
-        </div>
+            </form>
 
-        <div th:case="'3'" class="w3-row">
-
-            <h1>Edit your informations:</h1>
-                <input type="hidden" th:field="${judge.idJ}"/>
-
-                <p>Firstname: </p><input type="text" size="40" th:field="${judge.firstName}"/>
-                <br>
-                <p>Lastname: </p><input type="text" size="40" th:field="${judge.lastName}"/>
-                <br>
-                <p>Profession</p><input type="text" size="110" th:field="${judge.profession}">
-                <br>
-                <p>Job Description: </p><textarea rows="4" cols="50" th:field="${judge.jobdescription}"></textarea>
-                <br><br>
-                <input type="submit" class="btn btn-success" value="Edit"><!-- TO BE DONE -->
-
-        </div>
-
-        <div th:case="*" class="w3-row">
-            <p>You are not supposed to be here, no one's supposed to be here...</p>
         </div>
 
     </th:block>
+
 <br><br>
 
 <!-- Footer -->

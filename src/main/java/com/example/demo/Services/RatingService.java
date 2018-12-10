@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 public interface RatingService {
 
     Rating readRating(int id);
-    Rating giveRating (Rating rating);
+    Rating giveRating(Rating rating);
 }

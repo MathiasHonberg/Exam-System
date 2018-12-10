@@ -25,10 +25,10 @@ public class EventController {
 
 
     //LOGGER
-    Logger log = Logger.getLogger(HomeController.class.getName());
+    Logger log = Logger.getLogger(EventController.class.getName());
 
     //Return Strings
-    private final String EVENT = "event";
+    /*private final String EVENT = "event";
 
     @GetMapping("/event")
     public String event(Model model){
@@ -46,5 +46,5 @@ public class EventController {
 
         return EVENT;
 
-    }
+    }*/
 }

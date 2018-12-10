@@ -29,33 +29,51 @@ public class UserController {
     //Logger
     private Logger log = Logger.getLogger(UserController.class.getName());
 
-    //Redirect
-    private final String REDIRECT = "redirect:/";
-
-//LOGIN:
-
     //Current User logged in
     private User currentUser = new User();
     private Kitchen currentKitchen = new Kitchen();
 
-    //RETURN STRINGS
-    private final String LOGIN = "login";
-    private final String SIGNUP = "signup";
-    //GUEST ?
-    private final String KITCHEN = "kitchen/kitchen";
-    private final String JUDGE = "judge/judge";
-    private final String JUDGE_FORM = "judge/judge_form";
-    private final String KITCHEN_FORM = "kitchen/kitchen_form";
+//RETURN STRINGS
+
+    //Redirect
+    private final String REDIRECT = "redirect:/";
+
+    //LOGIN:
+    private final String LOGIN = "Login/login";
+    private final String SIGNUP = "Login/signup";
+
+    //INDEX
+    private final String INDEX_LOGGED = "index_logged";
+
+    //EVENT
+    private final String EVENT = "event";
+
+    //KITCHEN
+    private final String KITCHEN = "Kitchen/kitchen";
+    private final String EDIT_KITCHEN = "Kitchen/edit_kitchen";
+
+    //JUDGE
+    private final String JUDGE = "Judge/judge";
+    private final String EDIT_JUDGE = "Judge/edit_judge";
+
+    //RATING
+    private final String GIVE_RATING = "rating/give_rating";
+
+    //OTHER
+    private final String FORM = "form";
+    private final String ACCEPT = "accept";
+    private final String VERIFY = "Admin/verify";
+    private final String ACCOUNT = "account";
 
 
+//LOGIN
 
     //LOGIN
     @GetMapping("/login")
     public String login(Model model) {
-        log.info("login called...");
+        log.info("Get Login called...");
 
         model.addAttribute("users", new User());
-        //model.addAttribute("pageTitle", "Login");
         model.addAttribute("isLogin", true);
 
         userService.loginStatus(model);
@@ -65,6 +83,8 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute User user, Model model, RedirectAttributes redirAttr) {
+        log.info("Post Login called..");
+
         boolean loginMatch = false;
         loginMatch = userService.loginMatch(user);
 
@@ -74,35 +94,23 @@ public class UserController {
 
             currentUser = userService.loggedIn(user);
 
-            if (currentUser.getRole() == 1) {
+            model.addAttribute("role", currentUser.getRole());
 
-                return REDIRECT + INDEX_ADMIN;
-            } else if (currentUser.getRole() == 2) {
+            return REDIRECT + INDEX_LOGGED;
 
-                return REDIRECT + INDEX_KITCHEN;
-            } else if (currentUser.getRole() == 3) {
-
-                return REDIRECT + INDEX_JUDGE;
-            }else if (currentUser.getRole() == 4){
-
-                return REDIRECT + INDEX_USER;
-            }else {
-
-                redirAttr.addFlashAttribute("loginError", true);
-
-                return REDIRECT + LOGIN;
-            }
         } else {
 
             redirAttr.addFlashAttribute("loginError", true);
 
-            return REDIRECT + LOGIN;
+            return LOGIN;
         }
     }
 
     //LOGOUT
     @GetMapping("/logout")
     public String logout(Model model){
+        log.info("Logout called..");
+
         currentUser = new User();
 
         return REDIRECT;
@@ -111,8 +119,8 @@ public class UserController {
     //SIGN UP
     @GetMapping("/signup")
     public String signup(Model model){
+        log.info("Get Signup called...");
 
-        log.info("Sign up called...");
         model.addAttribute("user", new User());
 
         return SIGNUP;
@@ -120,6 +128,8 @@ public class UserController {
 
     @PostMapping("/signup")
     public String signup(@ModelAttribute User user, Model model,RedirectAttributes redirAttr) {
+        log.info("Post Signup called..");
+
         boolean signUpMatch = false;
         signUpMatch = userService.signUpMatch(user);
 
@@ -132,579 +142,213 @@ public class UserController {
             redirAttr.addFlashAttribute("loginError", true);
             log.info("User failed to create...");
 
-            return REDIRECT + SIGNUP;
+            return  SIGNUP;
         }
         return REDIRECT;
     }
 
-//Account
+//Index logged In
+
+    @GetMapping("/index_logged")
+    public String indexLogged(Model model) {
+        log.info("IndexLogged called ...");
+
+        List<Event> e = eventService.getEvents();
+        model.addAttribute("events", e);
+        model.addAttribute("username", currentUser.getUsername());
+        model.addAttribute("role", currentUser.getRole());
+
+        return INDEX_LOGGED;
+    }
+
+//Account informations
+
 
     @GetMapping("/account")
     public String Account(Model model){
 
-        model.addAttribute("user", currentUser);
-        return ACCOUNT;
-    }
-
-//User:
-
-    //Return Strings
-    private final String INDEX_USER = "user/index_user";
-    private final String EVENT_USER = "user/event_user";
-    private final String JUDGE_USER = "user/judge_user";
-    private final String KITCHEN_USER = "user/kitchen_user";
-    private final String ACCOUNT = "account";
-
-    @GetMapping("/user/index_user")
-    public String indexUser(Model model){
-        if(currentUser.getRole() == 4) {
-            model.addAttribute("events", eventService.getEvents());
-
-            model.addAttribute("username", currentUser.getUsername());
-
-            return INDEX_USER;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/user/event_user")
-    public String eventUser(Model model) {
-        log.info("See eventJudge action called..");
-
-        if(currentUser.getRole() == 4) { //checks if an judge is logged in
-            List<Kitchen> k = userService.getKitchens();
-            model.addAttribute("kitchens", k);
-
-            List<Judge> j = userService.getJudges();
-            model.addAttribute("judges", j);
-
-            List<Event> e = eventService.getEvents();
-            model.addAttribute("events", e);
-
-            model.addAttribute("username", currentUser.getUsername());
-
-            return EVENT_USER;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/user/kitchen_user/{id}")
-    public String readKitchenUser(@PathVariable("id") int id, Model model) {
-        log.info("Read kitchen with id: " + id);
-
-        if(currentUser.getRole() == 4) {
-            model.addAttribute("kitchen", userService.readKitchen(id));
-            if(ratingService.readRating(id) != null) {
-                model.addAttribute("rating", ratingService.readRating(id));
-            }
-            return KITCHEN_USER;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/user/judge_user/{id}")
-    public String readJudgeUser(@PathVariable("id") int id, Model model) {
-        log.info("Read judge with id: " + id);
-
-        if(currentUser.getRole() == 4) {
-            model.addAttribute("judge", userService.readJudge(id));
-
-            return JUDGE_USER;
-        }
-        return LOGIN;
-    }
-
-
-//ADMIN:
-
-    //Return Strings
-    private final String INDEX_ADMIN = "admin/index_admin";
-    private final String EVENT_ADMIN = "admin/event_admin";
-    private final String JUDGE_ADMIN = "admin/judge_admin";
-    private final String KITCHEN_ADMIN = "admin/kitchen_admin";
-    private final String VERIFY = "admin/verify";
-    private final String EDIT_JUDGE_ADMIN = "/admin/edit_judge";
-    private final String EDIT_KITCHEN_ADMIN = "admin/edit_kitchen";
-    private final String ACCOUNT_ADMIN = "admin/account";
-
-    //Account
-
-    @GetMapping("/admin/account")
-    public String adminAccount(Model model){
-
+        model.addAttribute("role", currentUser.getRole());
         model.addAttribute("user", currentUser);
         model.addAttribute("users", userService.getUsers());
 
-        return ACCOUNT_ADMIN;
+        return ACCOUNT;
     }
 
-    @GetMapping("/admin/index_admin")
-    public String indexAdmin(Model model){
-        log.info("IndexAdmin action called...");
+//Events logged In
 
-        if(currentUser.getRole() == 1) { //checks if an admin is logged in
-            List<Event> e = eventService.getEvents();
-            model.addAttribute("events", e);
+    @GetMapping("/event")
+    public String event(Model model) {
+        log.info("Event called..");
 
-            model.addAttribute("username", currentUser.getUsername());
+        List<Kitchen> k = userService.getKitchens();
+        model.addAttribute("kitchens", k);
 
-            return INDEX_ADMIN;
-        }
-        return LOGIN;
+        List<Judge> j = userService.getJudges();
+        model.addAttribute("judges", j);
+
+        List<Event> e = eventService.getEvents();
+        model.addAttribute("events", e);
+
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("username", currentUser.getUsername());
+
+        return EVENT;
     }
 
-    @GetMapping("/admin/event_admin")
-    public String eventAdmin(Model model) {
-        log.info("See eventAdmin action called..");
-        if(currentUser.getRole() == 1) { //checks if an admin is logged in
-            List<Kitchen> k = userService.getKitchens();
-            model.addAttribute("kitchens", k);
+//READ Kitchen n Judge
 
-            List<Judge> j = userService.getJudges();
-            model.addAttribute("judges", j);
-
-            List<Event> e = eventService.getEvents();
-            model.addAttribute("events", e);
-
-            model.addAttribute("username", currentUser.getUsername());
-
-            return EVENT_ADMIN;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/admin/kitchen_admin/{id}")
-    public String readKitchenAdmin(@PathVariable("id") int id, Model model) {
-        log.info("Read kitchenAdmin with id: " + id);
-        if(currentUser.getRole() == 1) { //checks if an admin is logged in
-            model.addAttribute("kitchen", userService.readKitchen(id));
-            model.addAttribute("rating", ratingService.readRating(id));
-            model.addAttribute("kitchenid", id);
-            model.addAttribute("username", currentUser.getUsername());
-
-            return KITCHEN_ADMIN;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/admin/edit_kitchen/{id}")
-    public String editKitchenAdmin(@PathVariable("id") int id, Model model){
-        log.info("Edit kitchen as admin action called...");
-
-        if(currentUser.getRole() == 1){
-
-            model.addAttribute("kitchen", userService.readKitchen(id));
-
-            return EDIT_KITCHEN_ADMIN;
-        }
-
-        return LOGIN;
-    }
-
-    @PutMapping("/admin/edit_kitchen/{id}")
-    public String editKitchenAdmin(@ModelAttribute Judge judge, Model model){
-
-        if(currentUser.getRole() == 1) {
-            userService.editJudge(judge);
-
-            model.addAttribute("kitchen", userService.getKitchens());
-
-            return KITCHEN_ADMIN;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/admin/judge_admin/{id}")
-    public String readJudgeAdmin(@PathVariable("id") int id, Model model) {
-        log.info("Read judgeAdmin with id: " + id);
-        if(currentUser.getRole() == 1) { //checks if an admin is logged in
-            model.addAttribute("judge", userService.readJudge(id));
-            model.addAttribute("judgeid", id);
-            model.addAttribute("username", currentUser.getUsername());
-
-            return JUDGE_ADMIN;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/admin/edit_judge/{id}")
-    public String editJudgeAdmin(@PathVariable("id") int id, Model model){
-        log.info("Edit Judge as judge action called...");
-
-        if(currentUser.getRole() == 1){
-
-            model.addAttribute("judge", userService.readJudge(id));
-
-            return EDIT_JUDGE_ADMIN;
-        }
-
-        return LOGIN;
-    }
-
-    @PutMapping("/admin/edit_judge/{id}")
-    public String editJudgeAdmin(@ModelAttribute Judge judge, Model model){
-
-        if(currentUser.getRole() == 1) {
-            userService.editJudge(judge);
-
-            model.addAttribute("judge", userService.getJudges());
-
-            return JUDGE_ADMIN;
-        }
-        return LOGIN;
-    }
-
-    //VERIFY
-    @GetMapping("/admin/verify")
-    public String verify(Model model){
-        log.info("Verify action called...");
-        if(currentUser.getRole() == 1) { //checks if an admin is logged in
-            model.addAttribute("kitchens", userService.getKitchens());
-
-            model.addAttribute("username", currentUser.getUsername());
-
-            return VERIFY;
-        }
-        return LOGIN;
-    }
-
-    @PutMapping("/admin/verify/{id}")
-    public String verify(@PathVariable("id") int id, @ModelAttribute Kitchen kitchen, Model model) {
-        log.info("Verify put action called...");
-        if(currentUser.getRole() == 1) { //checks if an admin is logged in
-
-            userService.confirmKitchen(id);
-
-            //model.addAttribute("kitchen", userService.getKitchens());
-
-            model.addAttribute("username", currentUser.getUsername());
-
-            return INDEX_ADMIN;
-        }
-        return LOGIN;
-    }
-
-
-//KITCHEN:
-
-    //Return Strings:
-    private final String INDEX_KITCHEN = "kitchen/index_kitchen";
-    private final String EVENT_KITCHEN = "kitchen/event_kitchen";
-    private final String JUDGE_KITCHEN = "kitchen/judge_kitchen";
-    private final String KITCHEN_KITCHEN = "kitchen/kitchen_kitchen";
-    private final String ACCEPT_KITCHEN = "kitchen/accept_kitchen";
-    private final String EDIT_KITCHEN = "kitchen/edit_kitchen";
-    private final String ACCOUNT_KITCHEN = "kitchen/account";
-
-    //Account
-
-    @GetMapping("/kitchen/account")
-    public String kitchenAccount(Model model){
-
-        model.addAttribute("user", currentUser);
-
-        return ACCOUNT_KITCHEN;
-    }
-
-    @GetMapping("/kitchen/index_kitchen")
-    public String indexKitchen(Model model){
-        if(currentUser.getRole() == 2) {
-            model.addAttribute("events", eventService.getEvents());
-
-            model.addAttribute("username", currentUser.getUsername());
-
-            return INDEX_KITCHEN;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/kitchen/event_kitchen")
-    public String eventKitchen(Model model) {
-        log.info("See eventKitchen action called..");
-
-        if(currentUser.getRole() == 2 || currentUser.getRole() == 4) { //checks if an kitchen is logged in
-            List<Kitchen> k = userService.getKitchens();
-            model.addAttribute("kitchens", k);
-
-            List<Judge> j = userService.getJudges();
-            model.addAttribute("judges", j);
-
-            List<Event> e = eventService.getEvents();
-            model.addAttribute("events", e);
-
-            model.addAttribute("username", currentUser.getUsername());
-
-            return EVENT_KITCHEN;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/kitchen/kitchen_kitchen/{id}")
-    public String readKitchenKitchen(@PathVariable("id") int id, Model model) {
-        log.info("Read kitchen with id: " + id);
-
-        if(currentUser.getRole() == 2) {
-            model.addAttribute("kitchen", userService.readKitchen(id));
-            model.addAttribute("rating", ratingService.readRating(id));
-
-            return KITCHEN_KITCHEN;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/kitchen/judge_kitchen/{id}")
-    public String readJudgeKitchen(@PathVariable("id") int id, Model model) {
-        log.info("Read judge with id: " + id);
-
-        if(currentUser.getRole() == 2) {
-            model.addAttribute("judge", userService.readJudge(id));
-
-            return JUDGE_KITCHEN;
-        }
-        return LOGIN;
-    }
-
-    //KITCHEN FORM
-    @GetMapping("/kitchen/kitchen_form")
-    public String kitchenForm(Model model){
-        log.info("AddKitchen action called...");
-        if(currentUser.getRole() == 4) {
-            model.addAttribute("kitchen", new Kitchen());
-
-            return KITCHEN_FORM;
-        } else if (currentUser.getRole() == 2){
-
-            return INDEX_KITCHEN;
-        } else if (currentUser.getRole() == 3){
-
-            return INDEX_JUDGE;
-        }
-        return LOGIN;
-    }
-
-    @PostMapping("/kitchen/kitchen_form/{id}")
-    public String kitchenForm(@PathVariable("id") int id, @ModelAttribute Kitchen kitchen, Model model){
-
-
-        if(currentUser.getRole() == 4) {
-            kitchen.setIduser(currentUser.getId());
-
-            currentKitchen = userService.addKitchen(kitchen);
-            //model.addAttribute("k4", k4);
-            model.addAttribute("kitchens", userService.getKitchens());
-            return ACCEPT_KITCHEN;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/kitchen/accept_kitchen/{id}")
-    public String kitchenAccept(@PathVariable("id") int id,  Model model){
-        if(currentUser.getRole() == 4){
-
-            userService.addKitchenToEvent(currentKitchen.getId());
-
-            return ACCEPT_KITCHEN;
-        }
-        return LOGIN;
-    }
-
-    //DETAILS
     @GetMapping("/kitchen/kitchen/{id}")
     public String readKitchen(@PathVariable("id") int id, Model model) {
         log.info("Read kitchen with id: " + id);
 
         model.addAttribute("kitchen", userService.readKitchen(id));
+        model.addAttribute("rating", ratingService.readRating(id));
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("username", currentUser.getUsername());
+        model.addAttribute("kitchenid", id);
 
-        if(ratingService.readRating(id) != null) {
-            model.addAttribute("showr", true);
-            model.addAttribute("rating", ratingService.readRating(id));
-        }
         return KITCHEN;
     }
 
-
-//JUDGE
-
-    //Return Strings
-    private final String INDEX_JUDGE = "judge/index_judge";
-    private final String EVENT_JUDGE = "judge/event_judge";
-    private final String JUDGE_JUDGE = "judge/judge_judge";
-    private final String KITCHEN_JUDGE = "judge/kitchen_judge";
-    private final String EDIT_JUDGE = "judge/edit_judge";
-    private final String ACCOUNT_JUDGE = "judge/account";
-
-    //Account
-
-    @GetMapping("/judge/account")
-    public String judgeAccount(Model model){
-
-        model.addAttribute("user", currentUser);
-        return ACCOUNT_JUDGE;
-    }
-
-    @GetMapping("/judge/index_judge")
-    public String indexJudge(Model model){
-        if(currentUser.getRole() == 3) {
-            model.addAttribute("events", eventService.getEvents());
-
-            model.addAttribute("username", currentUser.getUsername());
-
-            return INDEX_JUDGE;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/judge/event_judge")
-    public String eventJudge(Model model) {
-        log.info("See eventJudge action called..");
-
-        if(currentUser.getRole() == 3) { //checks if an judge is logged in
-            List<Kitchen> k = userService.getKitchens();
-            model.addAttribute("kitchens", k);
-
-            List<Judge> j = userService.getJudges();
-            model.addAttribute("judges", j);
-
-            List<Event> e = eventService.getEvents();
-            model.addAttribute("events", e);
-
-            model.addAttribute("username", currentUser.getUsername());
-
-            return EVENT_JUDGE;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/judge/kitchen_judge/{id}")
-    public String readKitchenJudge(@PathVariable("id") int id, Model model) {
-        log.info("Read kitchen with id: " + id);
-
-        if(currentUser.getRole() == 3) {
-            model.addAttribute("kitchen", userService.readKitchen(id));
-            model.addAttribute("rating", ratingService.readRating(id));
-
-            return KITCHEN_JUDGE;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/judge/judge_judge/{id}")
-    public String readJudgeJudge(@PathVariable("id") int id, Model model) {
-        log.info("Read judge with id: " + id);
-
-        if(currentUser.getRole() == 3) {
-            model.addAttribute("judge", userService.readJudge(id));
-
-            return JUDGE_JUDGE;
-        }
-        return LOGIN;
-    }
-
-    @GetMapping("/judge/edit_judge/{id}")
-    public String editJudgeJudge(Model model){
-        log.info("Edit Judge as judge action called...");
-
-        if(currentUser.getRole() == 3){
-
-            return EDIT_JUDGE;
-        }
-
-        return LOGIN;
-    }
-
-    @PutMapping("/judge/edit_judge/")
-    public String editJudgeJudge(@ModelAttribute Judge judge, Model model){
-        if(currentUser.getRole() == 3) {
-            userService.editJudge(judge);
-
-            model.addAttribute("judge", userService.getJudges());
-
-            return JUDGE_JUDGE;
-        }
-        return LOGIN;
-    }
-
-    //JUDGE FORM
-    @GetMapping("/judge/judge_form")
-    public String judgeForm(Model model){
-
-        if(currentUser.getRole() == 4) {
-            model.addAttribute("judge", new Judge());
-
-            return JUDGE_FORM;
-        } else if (currentUser.getRole() == 2){
-
-            return INDEX_KITCHEN;
-        } else if (currentUser.getRole() == 3){
-
-            return INDEX_JUDGE;
-        }
-        return LOGIN;
-    }
-
-    @PutMapping("/judge/judge_form")
-    public String judgeForm(@ModelAttribute Judge judge, Model model){
-
-
-        judge.setIduser(currentUser.getId());
-
-        userService.addJudge(judge);
-        model.addAttribute("judges", userService.getJudges());
-
-        //userService.addJudgeToEvent(judge.getId()); TODO
-
-        return INDEX_USER;
-
-    }
-
-    @PostMapping("/judge/accept_judge")
-    public String judgeAccept(Model model){
-        if(currentUser.getRole() == 4){
-
-            userService.addKitchenToEvent(2);
-
-            return ACCEPT_KITCHEN;
-        }
-        return LOGIN;
-    }
-
-    //DETAILS
     @GetMapping("/judge/judge/{id}")
     public String readJudge(@PathVariable("id") int id, Model model) {
         log.info("Read judge with id: " + id);
 
         model.addAttribute("judge", userService.readJudge(id));
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("username", currentUser.getUsername());
+        model.addAttribute("judgeid", id);
 
         return JUDGE;
     }
 
-//RATINGS
+//FORMS
 
-    //RETURN STRINGS
-    private final String GIVE_RATING = "rating/give_rating";
+    //Kitchen
+    @GetMapping("/form")
+    public String kitchenForm(Model model) {
+        log.info("Get kitchenForm called...");
+
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("kitchen", new Kitchen());
+        model.addAttribute("judge", new Judge());
+
+        return FORM;
+    }
+
+    @PostMapping("/form/{id}")
+    public String kitchenForm(@PathVariable("id") int id, @ModelAttribute Kitchen kitchen, Model model){
+        log.info("Post kitchenForm called + id: " + id);
+
+        kitchen.setIduser(currentUser.getId());
+        currentKitchen = userService.addKitchen(kitchen);
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("kitchens", userService.getKitchens());
+
+        return ACCEPT;
+    }
+
+    @GetMapping("/kitchen/accept/{id}")
+    public String kitchenAccept(@PathVariable("id") int id,  Model model){
+        log.info("Get kitchenAccept called + id: " + id);
+
+        model.addAttribute("role", currentUser.getRole());
+        userService.addKitchenToEvent(currentKitchen.getId());
+
+        return ACCEPT;
+    }
+
+    @GetMapping("/judge/accept/{id}")
+    public String judgeAccept(@PathVariable("id") int id, Model model){
+        log.info("Post judgeAccept called + id: " + id);
+
+        model.addAttribute("role", currentUser.getRole());
+        userService.addKitchenToEvent(2);
+
+        return ACCEPT;
+    }
+
+
+//JUDGE EDIT
+
+    @GetMapping("/judge/edit_judge/{id}")
+    public String editJudgeJudge(@PathVariable("id") int id, Model model){
+        log.info("Get Edit Judge called as judge with id: " + id);
+
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("judge", userService.readJudge(id));
+
+        return EDIT_JUDGE;
+    }
+
+    @PostMapping("/judge/edit_judge/{id}")
+    public String editJudgeJudge(@PathVariable("id") int id, @ModelAttribute Judge judge, Model model){
+        log.info("Put Edit Judge called as Judge with id: " + id);
+
+        userService.editJudge(judge);
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("judge", userService.getJudges());
+
+        return EDIT_JUDGE;
+    }
+//KITCHEN EDIT
+
+
+    @GetMapping("/kitchen/edit_kitchen/{id}")
+    public String editKitchen(@PathVariable("id") int id, Model model){
+        log.info("Get Edit Judge called as judge with id: " + id);
+
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("kitchen", userService.readKitchen(id));
+
+        return EDIT_KITCHEN;
+    }
+
+//VERIFY
+
+    @GetMapping("/admin/verify")
+    public String verify(Model model){
+        log.info("Verify action called...");
+
+        model.addAttribute("kitchens", userService.getKitchens());
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("username", currentUser.getUsername());
+
+        return VERIFY;
+    }
+
+    @PutMapping("/admin/verify/{id}")
+    public String verify(@PathVariable("id") int id, Model model) {
+        log.info("Verify put action called...");
+
+        userService.confirmKitchen(id);
+
+        //model.addAttribute("kitchen", userService.getKitchens());
+        model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("username", currentUser.getUsername());
+
+        return VERIFY;
+    }
+
+//RATINGS
 
     @GetMapping("/rating/give_rating{id}")
     public String giveRating(@PathVariable Integer id, Model model){
+        log.info("Get rating action called with id: " + id);
 
-        if(currentUser.getRole() == 3){
+        model.addAttribute("rating", new Rating());
+        model.addAttribute("role", currentUser.getRole());
 
-            model.addAttribute("rating", new Rating());
-
-            return GIVE_RATING;
-        }
-        return LOGIN;
+        return GIVE_RATING;
     }
 
     @PostMapping("/rating/give_rating{id}")
     public String giveRating(@PathVariable Integer id, @ModelAttribute Rating rating, Model model){
 
-        if(currentUser.getRole() == 3){
+        ratingService.giveRating(rating);
+        model.addAttribute("role", currentUser.getRole());
 
-            ratingService.giveRating(rating);
-
-            return EVENT_JUDGE;
-        }
-        return LOGIN;
+        return EVENT;
     }
 
 }

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 public interface RatingRepo {
 
     Rating readRating(int id);
-    Rating giveRating (Rating rating);
+    Rating giveRating(Rating rating);
 }
