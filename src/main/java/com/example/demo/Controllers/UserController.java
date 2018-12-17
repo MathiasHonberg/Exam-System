@@ -332,17 +332,18 @@ public class UserController {
 
 //RATINGS
 
-    @GetMapping("/rating/give_rating{id}")
+    @GetMapping("/rating/give_rating/{id}")
     public String giveRating(@PathVariable Integer id, Model model){
         log.info("Get rating action called with id: " + id);
 
         model.addAttribute("rating", new Rating());
+        model.addAttribute("kitchen", userService.readKitchen(id));
         model.addAttribute("role", currentUser.getRole());
 
         return GIVE_RATING;
     }
 
-    @PostMapping("/rating/give_rating{id}")
+    @PostMapping("/rating/give_rating/{id}")
     public String giveRating(@PathVariable Integer id, @ModelAttribute Rating rating, Model model){
 
         ratingService.giveRating(rating);

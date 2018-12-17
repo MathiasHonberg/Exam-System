@@ -15,7 +15,8 @@ public class RatingRepoImpl implements RatingRepo{
 
     @Override
     public Rating readRating(int id) {
-        String sql = "SELECT idrating, evaluation, ascore, tscore, idkitchen, judge.idjudge, judge.firstname, judge.lastname FROM rating " +
+        String sql = "SELECT idrating, evaluation, ascore, tscore, idkitchen, judge.idjudge, " +
+                "judge.firstname, judge.lastname FROM rating " +
                 "INNER JOIN judge ON judge.idjudge = rating.idjudge " +
                 "WHERE idkitchen = ?";
 

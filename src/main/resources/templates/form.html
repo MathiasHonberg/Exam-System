@@ -31,8 +31,8 @@
 
             <div>
 
-                <h1>Apply for kitchen</h1>
-                <form th:method="Post" th:action="@{/kitchen/form/}">
+                <h1>Apply for Kitchen</h1>
+                <form th:method="Post" th:action="@{/form}">
 
                     <p>Name: </p><input type="text" size="40" th:field="${kitchen.name}"/>
                     <br>
@@ -48,22 +48,44 @@
             </div>
         </div>
 
-        <div th:case="'3'">
+        <div th:case="'3'" class="w3-row">
 
-            <form th:method="Post" th:action="@{/kitchen/form/}">
+            <div>
 
-                <p>First name: </p><input type="text" size="40" th:field="${judge.firstName}"/>
-                <br>
-                <p>Last name: </p><input type="text" size="40" th:field="${judge.lastName}"/>
-                <br>
-                <p>Profession </p><input type="text" size="40" th:field="${judge.profession}"/>
-                <br>
-                <p>Job Description: </p><textarea rows="4" cols="50" th:field="${judge.jobdescription}"></textarea>
-                <br><br>
-                <input type="submit" class="btn btn-success" value="Apply">
+                <h1>Apply for Judge</h1>
+                <form th:method="Post" th:action="@{/form}">
 
-            </form>
+                    <p>Name: </p><input type="text" size="40" th:field="${judge.name}"/>
+                    <br>
+                    <p>Address: </p><input type="text" size="40" th:field="${judge.address}"/>
+                    <br>
+                    <p>Description: </p><textarea rows="4" cols="50" th:field="${judge.description}"></textarea>
+                    <br>
+                    <p>Picture link:</p><input type="text" size="110" th:field="${judge.picture}">
+                    <br><br>
+                    <input type="submit" class="btn btn-success" value="Apply">
 
+                </form>
+            </div>
+        </div>
+
+        <div th:case="'4'">
+            <div>
+                <h1>Apply for Kitchen</h1>
+                <form th:method="Post" th:action="@{/form}">
+
+                    <p>First name: </p><input type="text" size="40" th:field="${kitchen.name}"/>
+                    <br>
+                    <p>Last name: </p><input type="text" size="40" th:field="${kitchen.address}"/>
+                    <br>
+                    <p>Job Description: </p><textarea rows="4" cols="50" th:field="${kitchen.description}"></textarea>
+                    <br>
+                    <p>Picture link: </p><input type="text" size="40" th:field="${kitchen.picture}"/>
+                    <br><br>
+                    <input type="submit" class="btn btn-success" value="Apply">
+
+                </form>
+            </div>
         </div>
 
     </th:block>

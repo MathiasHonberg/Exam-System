@@ -27,7 +27,7 @@
 
 <div>
 
-    <h1>Give Rating to (kitchen)</h1>
+    <h1>Give Rating to <span th:text="${kitchen.name}"></span></h1>
     <form th:method="Post" th:action="@{/rating/give_rating}">
 
         <p>Appearance score: </p><input type="int" size="10" th:field="${rating.ascore}"/>
