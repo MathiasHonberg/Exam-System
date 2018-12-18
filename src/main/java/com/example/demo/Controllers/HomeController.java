@@ -30,6 +30,7 @@ public class HomeController {
     //RETURN STRING
     private final String INDEX = "index";
 
+    //TOBIAS
     @GetMapping("/")
     public String index(Model model){
         log.info("Index action called...");

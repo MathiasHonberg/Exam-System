@@ -28,8 +28,6 @@ public class EventRepoImpl implements EventRepo {
         String sql = "SELECT name, description, date FROM event";
 
 
-        // Fra sql til list.
-        // Manuelt i stedet.
         return this.jdbc.query(sql, new ResultSetExtractor<List<Event>>() {
 
             @Override
